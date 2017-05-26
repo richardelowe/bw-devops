@@ -24,5 +24,8 @@ echo "jenkins ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 echo "Defaults:%jenkins !requiretty" >> /etc/sudoers
 echo "Defaults:jenkins !requiretty" >> /etc/sudoers
 
+# configure maven
+echo "export M2_HOME=/usr/share/maven" >> /etc/profile.d/maven.sh
+
 # start Jenkins
 service jenkins start
