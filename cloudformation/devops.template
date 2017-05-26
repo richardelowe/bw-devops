@@ -1,0 +1,210 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "AWS CloudFormation template to deploy the TIBCO BW DevOps Demo",
+	"Parameters": {
+		"KeyName": { "Type": "String", "Default": "devops.pem", "MinLength": 1, "MaxLength": 64, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Name of an existing EC2 KeyPair to eable SSH access to the instance", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes, dot and underscores." },
+        "TypeTag": { "Type": "String", "Default": "devops",		"MinLength": 1, "MaxLength": 64, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Value of the Type tag that will be attached to resources", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes and underscores." },
+        "JenkinsPwd": { "Type": "String", "Default": "Tibco123.", "MinLength": 1, "MaxLength": 32, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Password for user admin in Jenkins", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes, dot and underscores." }
+    },
+    "Mappings": {
+        "RegionAMIMap": {
+            "ca-central-1":     { "CentosAMI": "ami-28823e4c" },
+            "us-east-1":        { "CentosAMI": "ami-46c1b650" },
+            "us-east-2":        { "CentosAMI": "ami-18f8df7d" },
+            "us-west-1":        { "CentosAMI": "ami-f5d7f195" },
+            "us-west-2":        { "CentosAMI": "ami-f4533694" },
+            "eu-central-1":     { "CentosAMI": "ami-fa2df395" },
+            "eu-west-1":        { "CentosAMI": "ami-061b1560" },
+            "eu-west-2":        { "CentosAMI": "ami-e05a4d84" },
+            "ap-south-1":       { "CentosAMI": "ami-3c0e7353" },
+            "ap-southeast-1":   { "CentosAMI": "ami-7d2eab1e" }, 
+            "ap-southeast-2":   { "CentosAMI": "ami-34171d57" }, 
+            "ap-northeast-1":   { "CentosAMI": "ami-29d1e34e" },
+            "ap-northeast-2":   { "CentosAMI": "ami-08e93466" },
+            "sa-east-1":        { "CentosAMI": "ami-b31a75df" }
+        }
+    },
+
+	"Resources": {
+		"CfnUser" : {
+			"Type" : "AWS::IAM::User",
+			"Properties" : {
+                "Path": "/",
+                "Policies": [{
+                    "PolicyName": "root",
+                    "PolicyDocument": { "Statement":[{
+                        "Effect":"Allow",
+                        "Action"   : [
+                            "cloudformation:DescribeStackResource",
+                            "s3:GetObject"
+                        ],
+                        "Resource":"*"
+                    }]}
+                }]
+            }
+        },
+
+        "CfnKeys" : {
+            "Type" : "AWS::IAM::AccessKey",
+            "Properties" : {
+                "UserName" : { "Ref": "CfnUser" }
+            }
+        },
+
+        "HostKeys" : {
+            "Type" : "AWS::IAM::AccessKey",
+            "Properties" : {
+                "UserName" : { "Ref": "CfnUser" }
+            }
+        },
+        
+        "SGDevOps": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable access to the DevOps infrastructure"
+            }
+        },
+        "SGDevOpsIngressExternalSSH": {
+            "Type": "AWS::EC2::SecurityGroupIngress",
+            "Properties": { "GroupId": { "Fn::GetAtt": [ "SGDevOps", "GroupId" ] }, "IpProtocol": "tcp", "FromPort": 22, "ToPort": 22, "CidrIp": "0.0.0.0/0" }
+        },
+        "SGDevOpsIngressExternalJenkins": {
+            "Type": "AWS::EC2::SecurityGroupIngress",
+            "Properties": { "GroupId": { "Fn::GetAtt": [ "SGDevOps", "GroupId" ]}, "IpProtocol": "tcp", "FromPort": 80, "ToPort": 80, "CidrIp": "0.0.0.0/0" }
+        },
+        "SGDevOpsIngressInternalAll": {
+            "Type": "AWS::EC2::SecurityGroupIngress",
+            "Properties": { "GroupId": { "Fn::GetAtt": [ "SGDevOps", "GroupId" ]}, "IpProtocol": "tcp", "FromPort": 0, "ToPort": 65535, "SourceSecurityGroupId": { "Fn::GetAtt": [ "SGDevOps", "GroupId" ]}}
+        },
+        "DevOps": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": { "Ref": "KeyName" },
+                "InstanceType": "m3.medium",
+                "ImageId": { "Fn::FindInMap" : [ "RegionAMIMap", { "Ref": "AWS::Region" }, "CentosAMI"]},
+                "BlockDeviceMappings": [{ "DeviceName": "/dev/sda1", "Ebs": { "DeleteOnTermination": "true", "VolumeSize": 20 }}],
+                "SecurityGroupIds": [{ "Fn::GetAtt": [ "SGDevOps", "GroupId" ]}],
+                "Tags": [
+                    { "Key": "Name", "Value": "DevOps Integration Center" },
+                    { "Key": "Type", "Value": { "Ref": "TypeTag" } }
+                ],
+                "UserData": { "Fn::Base64" : { "Fn::Join" : ["", [
+                    "#!/bin/bash\n",
+                    "yum -y update\n",
+                    "yum -y install epel-release\n",
+                    "yum -y install python-daemon\n",
+                    "yum -y install python-pip\n",
+                    "yum -y install wget\n",
+                    "pip install --upgrade pip\n",
+                    "pip install pystache\n",
+                    "pip install argparse\n",
+                    "pip install requests\n",
+                    "curl -sSL https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz | tar -zxpf - -C /opt\n",
+                    "cd /opt/aws-cfn-bootstrap-1.4\n",
+                    "python setup.py build\n",
+                    "python setup.py install\n",
+                    "ln -s /usr/init/redhat/cfn-hup /etc/init.d/cfn-hup\n",
+                    "chmod 775 /usr/init/redhat/cfn-hup\n",
+                    "mkdir /opt/aws\n",
+                    "mkdir /opt/aws/bin\n",
+                    "cd /opt/aws/bin\n",
+                    "ln -s /usr/bin/cfn-hup /opt/aws/bin/cfn-hup\n",
+                    "ln -s /usr/bin/cfn-signal /opt/aws/bin/cfn-signal\n",
+                    "ln -s /usr/bin/cfn-init /opt/aws/bin/cfn-init\n",
+
+                    "## Error reporting helper function\n",
+                    "function error_exit\n",
+                    "{\n",
+                    "   /opt/aws/bin/cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WaitHandleDevOpsInstance" }, "'\n",
+                    "   exit 1\n",
+                    "}\n",
+
+                    "## Initialize CloudFormation bits\n",
+                    "/opt/aws/bin/cfn-init -v -s ", { "Ref" : "AWS::StackName" }, " -r DevOps",
+                    "   --access-key ",  { "Ref" : "HostKeys" },
+                    "   --secret-key ", {"Fn::GetAtt": ["HostKeys", "SecretAccessKey"]},
+                    "   --region ", { "Ref" : "AWS::Region" }, " > /tmp/cfn-init.log 2>&1 || error_exit $(</tmp/cfn-init.log)\n",
+        
+                    "## Jenkins setup\n",
+             		"wget --no-check-certificate --content-disposition -P /tmp https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/jenkins.sh\n",
+             		"chmod +x /tmp/jenkins.sh\n",
+             		"/tmp/jenkins.sh ", { "Ref" : "JenkinsPwd" }, "\n",
+             		"rm -f /tmp/jenkins.sh\n",
+
+                    "## Nginx setup\n",
+             		"wget --no-check-certificate --content-disposition -P /tmp https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/nginx.sh\n",
+             		"chmod +x /tmp/nginx.sh\n",
+             		"/tmp/nginx.sh\n",
+             		"rm -f /tmp/nginx.sh\n",
+
+                    "## CloudFormation signal that setup is complete\n",
+                    "/opt/aws/bin/cfn-signal -e 0 -r \"DevOpsInstance setup complete\" '", { "Ref" : "WaitHandleDevOpsInstance" }, "'\n"
+                ]]}}
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Init" : {
+                    "config" : {
+                        "packages" : {
+                            "yum" : {
+                                "nginx":      				[],
+                                "java-1.8.0-openjdk-devel": [],
+                                "git":       				[],
+                                "groovy":    				[]
+                            }
+                        },
+                        "files" : {
+                            "/tmp/nginx/default.conf" : {
+                                "content" : { "Fn::Join" : ["", [
+                                    "upstream jenkins {\n",
+                                    "  server 127.0.0.1:8080 fail_timeout=0;\n",
+                                    "}\n\n",
+                                    "server {\n",
+                                    "  listen 80 default;\n",
+                                    "  listen [::]:80 default ipv6only=on;\n",
+                                    "  charset utf-8;\n",
+                                    "  location / {\n",
+                                    "    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
+                                    "    proxy_set_header Host $http_host;\n",
+                                    "    proxy_redirect off;\n\n",
+                                    "    if (!-f $request_filename) {\n",
+                                    "      proxy_pass http://jenkins;\n",
+                                    "      break;\n",
+                                    "    }\n",
+                                    "  }\n",
+                                    "}\n"
+                                ]]},
+                                "mode"   : "000755",
+                                "owner"  : "root",
+                                "group"  : "root"
+                            }
+                        },
+
+                        "services" : {
+                            "sysvinit" : {  
+                                "nginx"    : { "enabled" : "true", "ensureRunning" : "true", "files": ["/etc/nginx/conf.d/default.conf"] }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "WaitHandleDevOpsInstance" : {
+            "Type" : "AWS::CloudFormation::WaitConditionHandle",
+            "Properties" : {}
+        },
+        "WaitConditionDevOpsInstance" : {
+            "Type" : "AWS::CloudFormation::WaitCondition",
+            "DependsOn" : "DevOps",
+            "Properties" : {
+                "Handle" : { "Ref" : "WaitHandleDevOpsInstance" },
+                "Timeout" : "300"
+            }
+        }        
+    },
+    "Outputs" : {
+        "DevOpsURL" : {
+            "Value" : { "Fn::Join" : ["", ["http://", { "Fn::GetAtt" : [ "DevOps", "PublicDnsName" ]}, ""]] },
+            "Description" : "DevOps Installation"
+        }
+    }
+}
