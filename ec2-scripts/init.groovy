@@ -25,7 +25,7 @@ instance.save()
 // install plugins
 def installed = false
 def initialised = false
-def pluginsString = "git s3 jenkins-cloudformation-plugin build-pipeline-plugin dashboard-view workflow-aggregator"
+def pluginsString = "githug build-pipeline-plugin dashboard-view workflow-aggregator"
 def plugins = pluginsString.split()
 def pm = instance.getPluginManager()
 def uc = instance.getUpdateCenter()
