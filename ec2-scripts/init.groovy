@@ -17,6 +17,7 @@ instance.save()
 // disable CLI
 def CLIConfig = jenkins.CLI.get()
 CLIConfig.setEnabled(false)
+CLIConfig.save()
 
 // Agent Master ACL
 instance.injector.getInstance(AdminWhitelistRule.class).setMasterKillSwitch(false);
