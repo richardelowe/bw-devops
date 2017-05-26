@@ -3,6 +3,11 @@
 import jenkins.model.*
 import hudson.security.*
 import jenkins.security.s2m.*
+  
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+import com.cloudbees.plugins.credentials.CredentialsScope
+import hudson.util.Secret
 
 // create admin account
 def instance = Jenkins.getInstance()
@@ -55,3 +60,16 @@ define mavenList = (mavenPluginExtension.installations as List);
 mavenList.add(new hudson.tasks.Maven.MavenInstallation("M3", "/usr/share/maven", []));
 mavenPluginExtension.installations = mavenList
 mavenPluginExtesion.save()
+
+// configure credentials for github
+def credential = new StringCredentialsImpl(CredentialsScope.GLOBAL,
+                                           UUID.randomUUID().toString(),
+                                           "Access to GitHub",
+                                           Secret.fromString("9ded3dec8aeef7cbb216479ad28e415f06828754"));
+
+def credentialsStore = jenkins.model.Jenkins.instance.getExtensionList(com.cloudbees.plugins.credentials.SystemCredentialsProvider.class)[0]
+def credentials = credentialsStore.getCredentials()
+credentials.add(credential)
+credentialsStore.save()
+
+// configure github server
