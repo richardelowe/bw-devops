@@ -5,7 +5,7 @@
 		"KeyName": { "Type": "String", "Default": "devops.pem", "MinLength": 1, "MaxLength": 64, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Name of an existing EC2 KeyPair to eable SSH access to the instance", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes, dot and underscores." },
 		"TypeTag": { "Type": "String", "Default": "devops",		"MinLength": 1, "MaxLength": 64, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Value of the Type tag that will be attached to resources", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes and underscores." },
 		"JenkinsPwd": { "Type": "String", "Default": "Tibco123.", "MinLength": 1, "MaxLength": 32, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Password for user admin in Jenkins", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes, dot and underscores." },
-		"GitHubToken": { "Type": "String", "MinLength": 1, "MaxLength": 64, "Description": "Token for GitHub" },
+		"GitHubToken": { "Type": "String", "MinLength": 1, "MaxLength": 64, "Description": "Token for GitHub" }
     },
     "Mappings": {
         "RegionAMIMap": {
