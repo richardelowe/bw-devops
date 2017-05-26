@@ -47,5 +47,11 @@ plugins.each() {
 
 if (installed) {
   instance.save()
-//  instance.doSafeRestart()
 }
+
+// configure maven
+define mavenPluginExtension = instance.getExtensionList(hudson.tasks.Maven.DescriptorImpl.class)[0];
+define mavenList = (mavenPluginExtension.installations as List);
+mavenList.add(new hudson.tasks.Maven.MavenInstallation("M3", "/usr/share/maven", []));
+mavenPluginExtension.installations = mavenList
+mavenPluginExtesion.save()
