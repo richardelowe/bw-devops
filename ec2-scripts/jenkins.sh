@@ -14,7 +14,7 @@ mv -f /etc/sysconfig/jenkins.new /etc/sysconfig/jenkins
 
 # download the groovy initialisation script for jenkins (setting admin and installing plugins)
 wget --no-check-certificate --content-disposition -P /jenkins https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/init.groovy
-sed "s/##PWD##/${1}/s/##GHTOKEN##/${2}/" /jenkins/init.groovy > /tmp/init.groovy
+sed "s/##PWD##/${1}/##GHTOKEN##/${2}/" /jenkins/init.groovy > /tmp/init.groovy
 mv -f /tmp/init.groovy /jenkins/init.groovy
 
 chown -R jenkins:jenkins /jenkins > /tmp/chown1.log 2>&1
