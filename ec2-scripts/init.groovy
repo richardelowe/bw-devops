@@ -13,6 +13,7 @@ def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
 instance.setAuthorizationStrategy(strategy)
 instance.save()
 
+// disable CLI
 def p = AgentProtocol.all()
 p.each { x ->
   if (x.name?.contains("CLI")) {
@@ -33,8 +34,9 @@ def removal = { lst ->
 
 removal(instance.getExtensionList(RootAction.class))
 removal(instance.actions)
+instance.save()
 
-// installation of plugins
+// install plugins
 def installed = false
 def initialised = false
 def pluginsString = "git s3 jenkins-cloudformation-plugin build-pipeline-plugin dashboard-view workflow-aggregator"
