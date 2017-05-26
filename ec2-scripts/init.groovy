@@ -2,6 +2,7 @@
 
 import jenkins.model.*
 import hudson.security.*
+import jenkins.security.s2m.*
 
 // create admin account
 def instance = Jenkins.getInstance()
@@ -14,26 +15,11 @@ instance.setAuthorizationStrategy(strategy)
 instance.save()
 
 // disable CLI
-def p = AgentProtocol.all()
-p.each { x ->
-  if (x.name?.contains("CLI")) {
-    // removing protocol
-    p.remove(x)
-  }
-}
+def CLIConfig = jenkins.CLI.get()
+CLIConfig.setEnabled(false)
 
-// disable CLI access over /cli URL
-def removal = { lst ->
-  lst.each { x ->
-    if (x.getClass().name.contains("CLIAction")) {
-      // removing extension
-      lst.remove(x)
-    }
-  }
-}
-
-removal(instance.getExtensionList(RootAction.class))
-removal(instance.actions)
+// Agent Master ACL
+instance.injector.getInstance(AdminWhitelistRule.class).setMasterKillSwitch(false);
 instance.save()
 
 // install plugins
