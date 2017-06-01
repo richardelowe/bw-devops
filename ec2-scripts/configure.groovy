@@ -20,7 +20,7 @@ mavenPluginExtension.save()
 def credentials = new StringCredentialsImpl(CredentialsScope.GLOBAL,
                                             UUID.randomUUID().toString(),
                                             "Access to GitHub",
-                                            Secret.fromString("1d3da6d0a4e2d9b27b82a5a57575f05f3f8c1157"))
+                                            Secret.fromString("##GHTOKEN##"))
 
 def credentialsStore = jenkins.model.Jenkins.instance.getExtensionList(com.cloudbees.plugins.credentials.SystemCredentialsProvider.class)[0]
 def globalDomain = com.cloudbees.plugins.credentials.domains.Domain.global()
