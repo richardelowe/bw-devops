@@ -26,7 +26,7 @@ instance.save()
 // install plugins
 def installed = false
 def initialised = false
-def pluginsString = "githug build-pipeline-plugin dashboard-view workflow-aggregator"
+def pluginsString = "github build-pipeline-plugin dashboard-view workflow-aggregator"
 def plugins = pluginsString.split()
 def pm = instance.getPluginManager()
 def uc = instance.getUpdateCenter()
