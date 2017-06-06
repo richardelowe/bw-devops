@@ -9,7 +9,7 @@ import org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl
 def instance = Jenkins.getInstance()
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
 def adminUser = hudsonRealm.createAccount("admin", "##PWD##")
-def sshProperty = new UserPropertyImpl("#SSHKEY#")
+def sshProperty = new UserPropertyImpl("##SSHKEY##")
 adminUser.addProperty(sshProperty)
 instance.setSecurityRealm(hudsonRealm)
 
