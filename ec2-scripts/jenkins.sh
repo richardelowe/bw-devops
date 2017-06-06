@@ -14,9 +14,13 @@ mv -f /etc/sysconfig/jenkins.new /etc/sysconfig/jenkins
 
 set GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
 
+# create jenkins dir
+mkdir /jenkins
+
 # create SSH key
 ssh-keygen -t rsa -N "" -f key.pem
 set SSH_KEY=$(cat key.pem.pub)
+
 
 # download the groovy initialisation script for jenkins (setting admin)
 wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/init.groovy
