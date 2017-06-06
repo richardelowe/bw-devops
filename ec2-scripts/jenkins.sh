@@ -16,7 +16,7 @@ set GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
 
 # create SSH key
 ssh-keygen -t rsa -N "" -f key.pem
-set SSH_KEY=$(cat key.pem)
+set SSH_KEY=$(cat key.pem.pub)
 
 # download the groovy initialisation script for jenkins (setting admin)
 wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/init.groovy
