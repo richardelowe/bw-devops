@@ -14,13 +14,17 @@ mv -f /etc/sysconfig/jenkins.new /etc/sysconfig/jenkins
 
 set GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
 
+# create SSH key
+ssh-keygen -t rsa -N key.pem
+set SSH_KEY=$(cat key.pem)
+
 # download the groovy initialisation script for jenkins (setting admin)
 wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/init.groovy
-sed "s/##PWD##/${1}/##GHTOKEN##/${2}/" /tmp/init.groovy > /jenkins/init.groovy
+sed "s/##PWD##/${1}/##SSHKEY##/${SSH_KEY}/" /tmp/init.groovy > /jenkins/init.groovy
 
 # download the groovy config script for jenkins (installing plugins)
 wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/configure.groovy
-sed "s/##PWD##/${1}/##GHTOKEN##/${2}/" /tmp/configure.groovy > /jenkins/configure.groovy
+sed "s/##GHTOKEN##/${2}/" /tmp/configure.groovy > /jenkins/configure.groovy
 
 chown -R jenkins:jenkins /jenkins > /tmp/chown1.log 2>&1
 
