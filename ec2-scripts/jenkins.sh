@@ -12,10 +12,15 @@ usermod -a -G jenkins centos
 sed 's/JENKINS_HOME=.*$/JENKINS_HOME=\"\/jenkins\"/;s/JENKINS_JAVA_OPTIONS=\"/&-Djenkins.install.runSetupWizard=false /' /etc/sysconfig/jenkins > /etc/sysconfig/jenkins.new
 mv -f /etc/sysconfig/jenkins.new /etc/sysconfig/jenkins
 
-# download the groovy initialisation script for jenkins (setting admin and installing plugins)
-wget --no-check-certificate --content-disposition -P /jenkins https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/init.groovy
-sed "s/##PWD##/${1}/##GHTOKEN##/${2}/" /jenkins/init.groovy > /tmp/init.groovy
-mv -f /tmp/init.groovy /jenkins/init.groovy
+set GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
+
+# download the groovy initialisation script for jenkins (setting admin)
+wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/init.groovy
+sed "s/##PWD##/${1}/##GHTOKEN##/${2}/" /tmp/init.groovy > /jenkins/init.groovy
+
+# download the groovy config script for jenkins (installing plugins)
+wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/configure.groovy
+sed "s/##PWD##/${1}/##GHTOKEN##/${2}/" /tmp/configure.groovy > /jenkins/configure.groovy
 
 chown -R jenkins:jenkins /jenkins > /tmp/chown1.log 2>&1
 
@@ -29,3 +34,16 @@ echo "export M2_HOME=/usr/share/maven" >> /etc/profile.d/maven.sh
 
 # start Jenkins
 service jenkins start
+
+set JENKINS_URL=http://localhost:8080
+
+# wait for Jenkins Web Server to be up
+while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]]; do sleep 5; done
+
+wget ${JENKINS_URL}/jnlpJars/jenkins-cli.jar
+
+foreach value ( github build-pipeline-plugin dashboard-view workflow-aggregator plain-credentials )
+  java -jar jenkins-cli.jar -s ${JENKINS_URL} -auth admin:admin install-plugin $value
+done
+
+java -jar jenkins-cli.jar -remoting -s http://localhost:8080 -i key.pem groovy configure.groovy
