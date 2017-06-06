@@ -21,7 +21,6 @@ mkdir /jenkins
 ssh-keygen -t rsa -N "" -f key.pem
 set SSH_KEY=$(cat key.pem.pub)
 
-
 # download the groovy initialisation script for jenkins (setting admin)
 wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/init.groovy
 sed "s/##PWD##/${1}/;s/##SSHKEY##/${SSH_KEY}/" /tmp/init.groovy > /jenkins/init.groovy
