@@ -12,14 +12,14 @@ usermod -a -G jenkins centos
 sed 's/JENKINS_HOME=.*$/JENKINS_HOME=\"\/jenkins\"/;s/JENKINS_JAVA_OPTIONS=\"/&-Djenkins.install.runSetupWizard=false /' /etc/sysconfig/jenkins > /etc/sysconfig/jenkins.new
 mv -f /etc/sysconfig/jenkins.new /etc/sysconfig/jenkins
 
-set GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
+export GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
 
 # create jenkins dir
 mkdir /jenkins
 
 # create SSH key
 ssh-keygen -t rsa -N "" -f key.pem
-set SSH_KEY=$(cat key.pem.pub)
+export SSH_KEY=$(cat key.pem.pub)
 
 # download the groovy initialisation script for jenkins (setting admin)
 wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/init.groovy
@@ -46,7 +46,7 @@ echo "export M2_HOME=/usr/share/maven" >> /etc/profile.d/maven.sh
 # start Jenkins
 service jenkins start
 
-set JENKINS_URL=http://localhost:8080
+export JENKINS_URL=http://localhost:8080
 
 # wait for Jenkins Web Server to be up
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]]; do sleep 5; done
