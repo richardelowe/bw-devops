@@ -50,8 +50,8 @@ while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]
 wget ${JENKINS_URL}/jnlpJars/jenkins-cli.jar
 
 foreach value ( github build-pipeline-plugin dashboard-view workflow-aggregator plain-credentials )
-  java -jar jenkins-cli.jar -s ${JENKINS_URL} -auth admin:admin install-plugin $value
+  java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem install-plugin $value
 done
 
-java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy configure.groovy
-java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy disable-cli.groovy
+java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy /jenkins/configure.groovy
+java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy /jenkins/disable-cli.groovy
