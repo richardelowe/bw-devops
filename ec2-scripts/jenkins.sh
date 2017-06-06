@@ -50,4 +50,5 @@ foreach value ( github build-pipeline-plugin dashboard-view workflow-aggregator 
   java -jar jenkins-cli.jar -s ${JENKINS_URL} -auth admin:admin install-plugin $value
 done
 
-java -jar jenkins-cli.jar -remoting -s http://localhost:8080 -i key.pem groovy configure.groovy
+java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy configure.groovy
+java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy disablecli.groovy
