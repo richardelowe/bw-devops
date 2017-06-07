@@ -53,7 +53,8 @@ while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]
 
 wget ${JENKINS_URL}/jnlpJars/jenkins-cli.jar
 
-foreach value ( github build-pipeline-plugin dashboard-view workflow-aggregator plain-credentials )
+for value in "github build-pipeline-plugin dashboard-view workflow-aggregator plain-credentials"
+do
   java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem install-plugin $value
 done
 
