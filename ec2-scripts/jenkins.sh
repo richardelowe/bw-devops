@@ -1,7 +1,28 @@
 #!/bin/bash
 
+export GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
+export GIT_TIB_URL=https://raw.githubusercontent.com/TIBCOSoftware/bw6-plugin-maven
+
 # install maven
-yum -y install maven > /tmp/yum-maven.log 2>&1
+cd /tmp
+wget http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+tar xzf apache-maven-3.3.9-bin.tar.gz
+mkdir /usr/local/maven
+mv apache-maven-3.3.9 /usr/local/maven/
+alternatives --install /usr/bin/mvn mvn /usr/local/maven/apache-maven-3.3.9/bin/mvn 1
+export M3_HOME=/usr/local/maven/apache-maven-3.3.9
+echo "export M3_HOME=/usr/local/maven/apache-maven-3.3.9" >> /etc/profile.d/maven.sh
+sed "s:<localRepository>.*:--><localRepository>/opt/tibco/maven</localRepository><\!--:" ${M3_HOME}/conf/settings.xml > settings.xml
+mv -f settings.xml ${M3_HOME}/conf/settings.xml
+
+# install bwce maven plugin
+wget --no-check-certificate --content-disposition ${GIT_TIB_URL}/master/Installer/TIB_BW_Maven_Plugin_1.2.1.zip
+unzip TIB_BW_Maven_Plugin_1.2.1.zip -d TIB_BW_Maven
+cd TIB_BW_Maven
+chmod +x install.sh
+mkdir /opt/tibco
+cd /opt/tibco/bw/6.3/maven/plugins/bw6-maven-plugin
+echo /opt/tibco | ./install.sh
 
 # download and install the jenkins package
 wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
@@ -14,8 +35,6 @@ usermod -a -G jenkins centos
 # install jenkins at /jenkins and disable the setup wizard
 sed 's/JENKINS_HOME=.*$/JENKINS_HOME=\"\/jenkins\"/;s/JENKINS_JAVA_OPTIONS=\"/&-Djenkins.install.runSetupWizard=false /' /etc/sysconfig/jenkins > /etc/sysconfig/jenkins.new
 mv -f /etc/sysconfig/jenkins.new /etc/sysconfig/jenkins
-
-export GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
 
 # create jenkins dir
 mkdir /jenkins
@@ -35,16 +54,13 @@ sed "s:##GHTOKEN##:${2}:" /tmp/configure.groovy > /jenkins/configure.groovy
 # download the groovy config script for jenkins (installing plugins)
 wget --no-check-certificate --content-disposition -P /jenkins ${GIT_URL}/ec2-scripts/disable-cli.groovy
 
-
 chown -R jenkins:jenkins /jenkins > /tmp/chown1.log 2>&1
+chown -R jenkins:jenkins /opt/tibco
 
 # add jenkins user to sudoers and disable tty
 echo "jenkins ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 echo "Defaults:%jenkins !requiretty" >> /etc/sudoers
 echo "Defaults:jenkins !requiretty" >> /etc/sudoers
-
-# configure maven
-echo "export M2_HOME=/usr/share/maven" >> /etc/profile.d/maven.sh
 
 # start Jenkins
 service jenkins start
