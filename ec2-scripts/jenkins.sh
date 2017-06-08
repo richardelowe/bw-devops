@@ -52,7 +52,7 @@ service jenkins start
 export JENKINS_URL=http://localhost:8080
 
 # wait for Jenkins Web Server to be up
-while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]]; do sleep 5; done
+while [[ "$(curl -s -o /dev/null -m 5 -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]]; do sleep 5; done
 
 wget ${JENKINS_URL}/jnlpJars/jenkins-cli.jar
 
@@ -64,7 +64,7 @@ done
 java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem restart
 
 # wait for Jenkins Web Server to be up
-while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]]; do sleep 5; done
+while [[ "$(curl -s -o /dev/null -m 5 -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]]; do sleep 5; done
 
 java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy /jenkins/configure.groovy
 java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy /jenkins/disable-cli.groovy
