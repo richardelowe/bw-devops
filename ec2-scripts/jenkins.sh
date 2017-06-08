@@ -3,6 +3,8 @@
 export GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
 export GIT_TIB_URL=https://raw.githubusercontent.com/TIBCOSoftware/bw6-plugin-maven
 
+yum -y install unzip > /tmp/yum-unzip.log 2>&1
+
 # install maven
 cd /tmp
 wget http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
@@ -21,8 +23,9 @@ unzip TIB_BW_Maven_Plugin_1.2.1.zip -d TIB_BW_Maven
 cd TIB_BW_Maven
 chmod +x install.sh
 mkdir /opt/tibco
-cd /opt/tibco/bw/6.3/maven/plugins/bw6-maven-plugin
 echo /opt/tibco | ./install.sh
+cd /opt/tibco/bw/6.3/maven/plugins/bw6-maven-plugin
+./install.sh
 
 # download and install the jenkins package
 wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
