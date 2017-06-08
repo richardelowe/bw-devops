@@ -26,6 +26,7 @@ mkdir /opt/tibco
 echo /opt/tibco | ./install.sh
 cd /opt/tibco/bw/6.3/maven/plugins/bw6-maven-plugin
 ./install.sh
+chown -R jenkins:jenkins /opt/tibco
 
 # download and install the jenkins package
 wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
