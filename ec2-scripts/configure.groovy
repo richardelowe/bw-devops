@@ -12,7 +12,7 @@ def instance = Jenkins.getInstance()
 // configure maven
 def mavenPluginExtension = instance.getExtensionList(hudson.tasks.Maven.DescriptorImpl.class)[0];
 def mavenList = (mavenPluginExtension.installations as List);
-mavenList.add(new hudson.tasks.Maven.MavenInstallation("M3", "/usr/share/maven", []));
+mavenList.add(new hudson.tasks.Maven.MavenInstallation("M3", "/usr/local/maven/apache-maven-3.3.9", []));
 mavenPluginExtension.installations = mavenList
 mavenPluginExtension.save()
 
