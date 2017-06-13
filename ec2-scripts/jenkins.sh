@@ -1,7 +1,6 @@
 #!/bin/bash
 
 export GIT_URL=https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master
-export GIT_TIB_URL=https://raw.githubusercontent.com/TIBCOSoftware/bw6-plugin-maven
 
 yum -y install unzip > /tmp/yum-unzip.log 2>&1
 
