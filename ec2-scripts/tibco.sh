@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export GIT_TIB_URL=https://raw.githubusercontent.com/TIBCOSoftware/bw6-plugin-maven
 
 # install bw/bwce maven plugin
