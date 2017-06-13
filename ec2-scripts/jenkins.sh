@@ -17,17 +17,6 @@ echo "export M3_HOME=/usr/local/maven/apache-maven-3.3.9" >> /etc/profile.d/mave
 sed "s:<localRepository>.*:--><localRepository>/opt/tibco/maven</localRepository><\!--:" ${M3_HOME}/conf/settings.xml > settings.xml
 mv -f settings.xml ${M3_HOME}/conf/settings.xml
 
-# install bwce maven plugin
-wget --no-check-certificate --content-disposition ${GIT_TIB_URL}/master/Installer/TIB_BW_Maven_Plugin_1.2.1.zip
-unzip TIB_BW_Maven_Plugin_1.2.1.zip -d TIB_BW_Maven
-cd TIB_BW_Maven
-chmod +x install.sh
-mkdir /opt/tibco
-echo /opt/tibco | ./install.sh
-cd /opt/tibco/bw/6.3/maven/plugins/bw6-maven-plugin
-./install.sh
-chown -R jenkins:jenkins /opt/tibco
-
 # download and install the jenkins package
 wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
 rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
