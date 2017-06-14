@@ -5,3 +5,4 @@ yum makecache fast
 yum -y install docker-ce
 gpasswd -a jenkins docker
 service docker start
+service jenkins restart
