@@ -1,10 +1,10 @@
 #!groovy
 
 import jenkins.model.*
-import com.cloudbees.plugins.credentials.SystemCredentialsProvider
-import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
-import com.cloudbees.plugins.credentials.CredentialsScope
 import hudson.util.Secret
+import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+import com.cloudbees.plugins.credentials.CredentialsScope
 import org.jenkinsci.plugins.github.config.*
 
 def instance = Jenkins.getInstance()
@@ -30,7 +30,10 @@ credentialsStore.save()
 // configure github server
 def githubPluginExtension = instance.getExtensionList(org.jenkinsci.plugins.github.config.GitHubPluginConfig.class)[0];
 def serverConfig = new GitHubServerConfig(credentials.getId())
+def githubHookSecretConfig = new HookSecretConfig(credentials.getId())
 serverConfig.setManageHooks(true)
 def configs = githubPluginExtension.getConfigs()
 configs.add(serverConfig)
+githubPluginExtension.setHookSecretConfig(githubHookSecretConfig)
+// githubPluginExtension.doReRegister()
 githubPluginExtension.save()
