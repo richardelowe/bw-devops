@@ -30,6 +30,7 @@ credentialsStore.save()
 // configure github server
 def githubPluginExtension = instance.getExtensionList(org.jenkinsci.plugins.github.config.GitHubPluginConfig.class)[0];
 def serverConfig = new GitHubServerConfig(credentials.getId())
+serverConfig.setManageHooks(true)
 def configs = githubPluginExtension.getConfigs()
 configs.add(serverConfig)
 githubPluginExtension.save()
