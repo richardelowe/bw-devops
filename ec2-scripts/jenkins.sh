@@ -43,7 +43,11 @@ sed "s:##PWD##:${1}:;s:##SSHKEY##:${SSH_KEY}:" /tmp/init.groovy > /jenkins/init.
 wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/configure.groovy
 sed "s:##GHTOKEN##:${2}:" /tmp/configure.groovy > /jenkins/configure.groovy
 
-# download the groovy config script for jenkins (installing plugins)
+# download the groovy pipeline setup script for jenkins (installing plugins)
+wget --no-check-certificate --content-disposition -P /tmp ${GIT_URL}/ec2-scripts/pipeline.xml
+wget --no-check-certificate --content-disposition -P /jenkins ${GIT_URL}/ec2-scripts/setup-pipeline.groovy
+
+# download the groovy disable cli script for jenkins (installing plugins)
 wget --no-check-certificate --content-disposition -P /jenkins ${GIT_URL}/ec2-scripts/disable-cli.groovy
 
 chown -R jenkins:jenkins /jenkins > /tmp/chown1.log 2>&1
@@ -75,4 +79,5 @@ java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem restart
 while [[ "$(curl -s -o /dev/null -m 5 -w ''%{http_code}'' ${JENKINS_URL})" != "200" ]]; do sleep 5; done
 
 java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy /jenkins/configure.groovy
+java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy /jenkins/setup-pipeline.groovy
 java -jar jenkins-cli.jar -remoting -s ${JENKINS_URL} -i key.pem groovy /jenkins/disable-cli.groovy
