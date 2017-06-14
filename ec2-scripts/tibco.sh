@@ -21,6 +21,7 @@ wget --no-check-certificate --content-disposition $1
 unzip bwce_docker.zip
 cd docker/resources/bwce-runtime
 wget --no-check-certificate --content-disposition $2
+cd /opt/tibco/bwce/docker
 docker build -t bwce:latest .
 
 chown -R jenkins:jenkins /opt/tibco
