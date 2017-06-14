@@ -1,4 +1,6 @@
+#!groovy
 
+import jenkins.model.*
 
 node {
     def mvnHome
