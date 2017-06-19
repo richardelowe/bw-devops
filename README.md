@@ -28,7 +28,7 @@ Here are some details of what is actually performed by this template:
     <li>Configure a SSH key to run Jenkins CLI,</li>
     <li>Create the admin user with the provided <code>JenkinsPwd</code>,</li>
     <li>Add the following plugins: <code>build-pipeline-plugin</code>, <code>dashboard-view</code>, <code>workflow-aggregator</code>, and <code>plain-credentials</code> with all their dependencies,</li>
-    <li>Configure Maven in Jenkins,</li>,
+    <li>Configure Maven in Jenkins,</li>
     <li>Create the the GitHub connectivity with the provided <code>GitHubToken</code> credentials,</li>
     <li>Setup a build pipeline for the <code>bookstore</code> sample,</li>
     <li>Disable Jenkins CLI access,</li>
