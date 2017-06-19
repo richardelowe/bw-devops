@@ -16,8 +16,8 @@ You are then prompted for a few parameters
 
 Here are some details of what is actually performed by this template:
 <ol>
-  <li>Create a CentOS-based EC2 M3.medium instance on your current AWS region,</li>
-  <li>Attach a Security Group with universal access on <code>TCP:22</code> (SSH) and <code>TCP:80</code> (HTTP) as well as internal <code>TCP:0-65535</code> access within the Security Group,</li>
+  <li>Create a CentOS-based EC2 M3.medium instance in your current AWS region,</li>
+  <li>Attach a Security Group to it with universal access on <code>TCP:22</code> (SSH) and <code>TCP:80</code> (HTTP) as well as internal <code>TCP:0-65535</code> access within the Security Group,</li>
   <li>Perform updates on the created machine (OS + Extended Packages),</li>
   <li>Install base packages: <code>python</code>, <code>pip</code>, <code>wget</code>,</li>
   <li>Install AWS CloudFormation Bootstrap, <code>aws-cfn-bootstrap</code>,</li>
