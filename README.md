@@ -11,6 +11,6 @@ You are then prompted for a few parameters
   <li><code>GitHubToken</code>, an access token for your GitHub repository containing a clone of <a href="https://github.com/eschweit-at-tibco/bookstore">bookstore</a>,</li>
   <li><code>JenkinsPwd</code>, the password you want to set for the <code>admin</code> user on Jenkins,</li>
   <li><code>KeyName</code>, the name of a EC2 Key Pair name you want to use to ssh into the created instance,</li>
-  <li><code>TypeTag</code, the label that will be added on the Type tag to any of the created EC2 resources created.</li>
+  <li><code>TypeTag</code>, the label that will be added on the Type tag to any of the created EC2 resources created.</li>
 </ul>
 
