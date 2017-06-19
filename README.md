@@ -23,7 +23,15 @@ Here are some details of what is actually performed by this template:
   <li>Install AWS CloudFormation Bootstrap, <code>aws-cfn-bootstrap</code>,</li>
   <li>Install and configure Jenkins</li>
   <ul>
-    <li>Hehe</li>
+    <li>Install and configure Maven 3.3.9, including preparing a local repository for BWCE stuff,</li>
+    <li>Install Jenkins last stable version,</li>
+    <li>Configure a SSH key to run Jenkins CLI,</li>
+    <li>Create the admin user with the provided <code>JenkinsPwd</code>,</li>
+    <li>Add the following plugins: <code>build-pipeline-plugin</code>, <code>dashboard-view</code>, <code>workflow-aggregator</code>, and <code>plain-credentials</code> with all their dependencies,</li>
+    <li>Configure Maven in Jenkins,</li>,
+    <li>Create the the GitHub connectivity with the provided <code>GitHubToken</code> credentials,</li>
+    <li>Setup a build pipeline for the <code>bookstore</code> sample,</li>
+    <li>Disable Jenkins CLI access,</li>
   </ul>
   <li>Install and configure Docker,</li>
   <li>Install and configure the required BWCE bits,</li>
