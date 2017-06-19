@@ -1,6 +1,6 @@
 # bw-devops
 
-This is a contribution aimed at speeding up the creation of an AWS EC2 node targeted at BWCE continuous integration.
+This is a contribution aimed at speeding up the creation of an AWS EC2 node for BWCE continuous integration.
 
 The main entry point is cloudformation/devops.template. It is a AWS CloudFormation template that you can run using the CloudFormation Service and selecting "Create Stack" and uploading that file to S3.
 
