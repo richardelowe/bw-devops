@@ -7,7 +7,7 @@ The main entry point is cloudformation/devops.template. It is a AWS CloudFormati
 You are then prompted for a few parameters
 <ul>
   <li><code>BWCECFURL</code>, the URL for the bwce_cf.zip package (v2.3), e.g. from S3,</li>
-  <li><code>BWCEDockerURL</code>, the URL for the bwce_docker.zip package (v2.3), a portion of the bwce install (docker subdir) you need to repackage, e.g. from S3,</li>
+  <li><code>BWCEDockerURL</code>, the URL for the bwce_docker.zip package (v2.3), a portion of the bwce install (docker subdir) you need to zip and make available, e.g. from S3,</li>
   <li><code>GitHubToken</code>, an access token for your GitHub repository containing a clone of <a href="https://github.com/eschweit-at-tibco/bookstore">bookstore</a>,</li>
   <li><code>JenkinsPwd</code>, the password you want to set for the <code>admin</code> user on Jenkins,</li>
   <li><code>KeyName</code>, the name of a EC2 Key Pair name you want to use to ssh into the created instance,</li>
