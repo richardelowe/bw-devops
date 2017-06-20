@@ -16,7 +16,8 @@
     </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.34">
-    <script>node {
+    <script>
+node {
     def mvnHome
     stage(&apos;Preparation&apos;) { // for display purposes
         // Get some code from a GitHub repository
@@ -44,10 +45,12 @@
     }
     
     stage(&apos;Results&apos;) {
-        // junit &apos;**/target/surefire-reports/TEST-*.xml&apos;
-        // archive &apos;target/*.jar&apos;
+        dir(&apos;tibco.bwce.sample.binding.rest.BookStore.application.parent&apos;) {
+            junit &apos;newman/newman-run-report-*.xml&apos;
+        }
     }
-}</script>
+}
+    </script>
     <sandbox>true</sandbox>
   </definition>
   <triggers/>
