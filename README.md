@@ -24,6 +24,7 @@ Here are some details of what is actually performed by this template:
   <li>Install and configure Jenkins</li>
   <ul>
     <li>Install and configure Maven 3.3.9, including preparing a local repository for BWCE stuff,</li>
+    <li>Install Runman (CLI version of Postman) for testing,</li>
     <li>Install Jenkins last stable version,</li>
     <li>Configure a SSH key to run Jenkins CLI,</li>
     <li>Create the admin user with the provided <code>JenkinsPwd</code>,</li>
