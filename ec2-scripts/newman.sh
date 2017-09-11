@@ -1,4 +1,4 @@
 #!/bin/bash
 
-yum -y install nodejs
+yum -y --enablerepo=cr install nodejs
 npm install newman -global
