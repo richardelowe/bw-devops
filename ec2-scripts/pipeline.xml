@@ -39,7 +39,7 @@ node {
     stage(&apos;Testing&apos;) {
         dir(&apos;tibco.bwce.sample.binding.rest.BookStore.application.parent&apos;) {
             if (isUnix()) {
-                sh &quot;ant build deploy-test-image newman undeploy-test-image&quot;
+                sh &quot;ant build deploy-test-image wipe-backenddb newman undeploy-test-image&quot;
             }
         }
     }
