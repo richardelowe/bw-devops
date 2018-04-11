@@ -4,7 +4,7 @@
   <keepDependencies>false</keepDependencies>
   <properties>
     <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.27.0">
-      <projectUrl>https://github.com/eschweit-at-tibco/bookstore.git/</projectUrl>
+      <projectUrl>https://github.com/eschweit-at-tibco/bookstoreV2.git/</projectUrl>
       <displayName></displayName>
     </com.coravy.hudson.plugins.github.GithubProjectProperty>
     <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
@@ -21,7 +21,7 @@ node {
     def mvnHome
     stage(&apos;Preparation&apos;) { // for display purposes
         // Get some code from a GitHub repository
-        git &apos;https://github.com/eschweit-at-tibco/bookstore.git&apos;
+        git &apos;https://github.com/eschweit-at-tibco/bookstoreV2.git&apos;
         mvnHome = tool &apos;M3&apos;
     }
     
