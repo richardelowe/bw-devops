@@ -92,6 +92,7 @@
           "yum -y install python-daemon\n",
           "yum -y install python-pip\n",
           "yum -y install wget\n",
+          "yum -y install postgresql\n",
           "pip install --upgrade pip\n",
           "pip install pystache\n",
           "pip install argparse\n",
