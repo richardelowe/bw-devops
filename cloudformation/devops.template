@@ -5,7 +5,9 @@
     "KeyName": { "Type": "String", "Default": "devops.pem", "MinLength": 1, "MaxLength": 64, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Name of an existing EC2 KeyPair to eable SSH access to the instance", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes, dot and underscores." },
     "TypeTag": { "Type": "String", "Default": "devops",   "MinLength": 1, "MaxLength": 64, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Value of the Type tag that will be attached to resources", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes and underscores." },
     "JenkinsPwd": { "Type": "String", "Default": "Tibco123.", "MinLength": 1, "MaxLength": 32, "AllowedPattern": "[-_ a-zA-Z0-9.]*", "Description": "Password for user admin in Jenkins", "ConstraintDescription": "Can contain only alphanumeric characters, spaces, dashes, dot and underscores." },
-    "GitHubToken": { "Type": "String", "MinLength": 1, "MaxLength": 64, "Description": "Token for GitHub" }
+    "GitHubToken": { "Type": "String", "MinLength": 1, "MaxLength": 64, "Description": "Token for GitHub" },
+    "BWCECFURL": { "Type": "String", "MinLength": 1, "MaxLength": 256, "Description": "URL for bwce_cf.zip file" },
+    "BWCEDockerURL": { "Type": "String", "MinLength": 1, "MaxLength": 256, "Description": "URL for bwce_docker.zip file" }
   },
 
   "Mappings": {
@@ -92,7 +94,7 @@
           "yum -y install python-daemon\n",
           "yum -y install python-pip\n",
           "yum -y install wget\n",
-          "yum -y install postgresql\n",
+ 					"yum -y install postgresql\n",
           "pip install --upgrade pip\n",
           "pip install pystache\n",
           "pip install argparse\n",
@@ -128,6 +130,24 @@
           "chmod +x /tmp/jenkins.sh\n",
           "/tmp/jenkins.sh ", { "Ref" : "JenkinsPwd" }, " ", { "Ref" : "GitHubToken" }, "\n",
           "rm -f /tmp/jenkins.sh\n",
+
+          "## docker setup\n",
+          "wget --no-check-certificate --content-disposition -P /tmp https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/docker.sh\n",
+          "chmod +x /tmp/docker.sh\n",
+          "/tmp/docker.sh >> /tmp/docker.log\n",
+          "rm -f /tmp/docker.sh\n",
+
+          "## TIBCO setup\n",
+          "wget --no-check-certificate --content-disposition -P /tmp https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/tibco.sh\n",
+          "chmod +x /tmp/tibco.sh\n",
+          "/tmp/tibco.sh ", { "Ref" : "BWCEDockerURL" }, " ", { "Ref" : "BWCECFURL" }, "  >> /tmp/tibco.log\n",
+          "rm -f /tmp/tibco.sh\n",
+
+          "## newman setup\n",
+          "wget --no-check-certificate --content-disposition -P /tmp https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/newman.sh\n",
+          "chmod +x /tmp/newman.sh\n",
+          "/tmp/newman.sh >> /tmp/newman.log\n",
+          "rm -f /tmp/newman.sh\n",
 
           "## Nginx setup\n",
           "wget --no-check-certificate --content-disposition -P /tmp https://raw.githubusercontent.com/eschweit-at-tibco/bw-devops/master/ec2-scripts/nginx.sh\n",
