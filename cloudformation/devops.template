@@ -276,7 +276,7 @@
                               },
                               " ",
                               {
-                                  "Ref": "GitHubToken"
+                                  "Ref": "BookstoreGitHubToken"
                               },
                               "\n",
                               "rm -f /tmp/jenkins.sh\n",
