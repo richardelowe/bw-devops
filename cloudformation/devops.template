@@ -88,7 +88,7 @@
               "CentosAMI": "ami-7d2eab1e"
           },
           "ap-southeast-2": {
-              "CentosAMI": "ami-34171d57"
+              "CentosAMI": "ami-d8c21dba"
           },
           "ap-northeast-1": {
               "CentosAMI": "ami-29d1e34e"
