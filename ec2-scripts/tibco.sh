@@ -1,12 +1,13 @@
 #!/bin/bash
 
-export GIT_TIB_URL=https://raw.githubusercontent.com/TIBCOSoftware/bw6-plugin-maven
+export GIT_TIB_URL=https://github.com/TIBCOSoftware/bw6-plugin-maven/releases/download
+export TIB_MAVEN_VERSION=2.1.0
 export TIB_MAVEN_ZIP_NAME=TIB_BW_Maven_Plugin_2.1.0.zip
 export TIB_BW_VERSION=6.5
 
 # install bw/bwce maven plugin
 cd /tmp
-wget --no-check-certificate --content-disposition ${GIT_TIB_URL}/master/Installer/${TIB_MAVEN_ZIP_NAME}
+wget --no-check-certificate --content-disposition ${GIT_TIB_URL}/v${TIB_BW_VERSION}/${TIB_MAVEN_ZIP_NAME}
 unzip ${TIB_MAVEN_ZIP_NAME} -d TIB_BW_Maven
 cd TIB_BW_Maven
 chmod +x install.sh
